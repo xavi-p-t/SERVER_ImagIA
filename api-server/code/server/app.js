@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+
 const port = 3000;
 const host = '0.0.0.0';
 
@@ -25,38 +26,61 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Ruta para subir una imagen
-app.post('/image', upload.single('image'), (req, res) => {
+app.post('/image', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send({ error: 'La imagen es requerida.' });
     }
 
     try {
         const filePath = req.file.path; // Ruta donde se guardó la imagen
-        res.status(200).send({ message: 'Imagen subida con éxito.', filePath });
+
+        // Convertir la imagen a base64
+        const base64Image = fs.readFileSync(filePath, { encoding: 'base64' });
+
+        const jsonBody = {
+            model: "llama3.2-vision:latest",
+            prompt: "What is in this picture?",
+            stream: false,
+            images: [base64Image]
+        };
+       
+        // Enviar la solicitud
+        const response = await sendToMarIA(jsonBody);
+
+        // Devolver la respuesta al cliente
+        res.status(200).send(response);
+
     } catch (err) {
         console.error(err);
-        res.status(500).send({ error: 'Error al guardar la imagen.' });
+        res.status(500).send({ error: 'Error al procesar la imagen.' });
     }
 });
+
+// Función para enviar la solicitud a la API
+async function sendToMarIA(jsonBody) {
+    try {
+        const response = await fetch('http://localhost:1111/api/generate', {
+            method: 'POST',
+            body: JSON.stringify(jsonBody),
+        });
+
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error al enviar la solicitud:', errorText);
+            return { error: errorText };
+        }
+
+        const data = await response.json();
+        console.log('Respuesta del modelo:', data);
+        return data;
+    } catch (error) {
+        console.error('Error al enviar la solicitud:', error);
+        return { error: 'Error al comunicarse con el modelo.' };
+    }
+}
 
 // Iniciar el servidor
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-
-
-// // Activar el servidor
-// const httpServer = app.listen(port, host, () => {
-//     console.log(`Servidor escuchando en: http://${host}:${port}`);
-// });
-
-// Aturar el servidor correctament
-process.on('SIGTERM', shutDown);
-process.on('SIGINT', shutDown);
-function shutDown() {
-    console.log('Recibida señal de cierre, apagando servidor.');
-    httpServer.close(() => {
-        console.log('Servidor cerrado.');
-        process.exit(0);
-    });
-}
