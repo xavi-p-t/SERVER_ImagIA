@@ -3,15 +3,12 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const port = 3000;
-const host = '0.0.0.0';
-
-const app = express();
+const router = express.Router();
 
 // Configuración de almacenamiento para multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, 'uploads');
+        const uploadPath = path.join(__dirname, '../../uploads');
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });
         }
@@ -26,7 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Ruta para subir una imagen
-app.post('/image', upload.single('image'), async (req, res) => {
+router.post('/image', upload.single('image'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send({ error: 'La imagen es requerida.' });
     }
@@ -56,14 +53,16 @@ app.post('/image', upload.single('image'), async (req, res) => {
     }
 });
 
-// Función para enviar la solicitud a la API
+// Función para enviar la solicitud a la API del modelo
+
+// **  FUNCIONA SOLO SI UTILIZO COMANDO SSH PARA REDIRIGIR EL SERVIOR A EL PUERTO LOCAL DE MI API **
 async function sendToMarIA(jsonBody) {
     try {
         const response = await fetch('http://localhost:1111/api/generate', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonBody),
         });
-
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -80,7 +79,4 @@ async function sendToMarIA(jsonBody) {
     }
 }
 
-// Iniciar el servidor
-app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
-});
+module.exports = router;
