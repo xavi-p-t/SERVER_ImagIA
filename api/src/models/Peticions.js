@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const Conversation = require('./Conversation');
 
-const Prompt = sequelize.define('Prompt', {
+const Peticions = sequelize.define('Peticions', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -15,18 +14,17 @@ const Prompt = sequelize.define('Prompt', {
             notEmpty: true
         }
     },
+    imatges: {
+        type: DataTypes.TEXT, // Se utiliza TEXT para almacenar múltiples imágenes como JSON (opcional).
+        allowNull: true,
+        validate: {
+            isUrl: true // Si se esperan URLs, esta validación puede ser útil.
+        }
+    },
     model: {
         type: DataTypes.STRING,
         defaultValue: "qwen2.5-coder",
         allowNull: false
-    },
-    stream: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
-    response: {
-        type: DataTypes.TEXT,
-        allowNull: true
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -38,8 +36,9 @@ const Prompt = sequelize.define('Prompt', {
     }
 });
 
-// Establir relació
-Prompt.belongsTo(Conversation);
-Conversation.hasMany(Prompt);
+// Establecer relación
+Peticions.belongsTo(Usuaris, { foreignKey: 'usuariId' });
+Usuaris.hasMany(Peticions, { foreignKey: 'usuariId' });
 
-module.exports = Prompt;
+
+module.exports = Peticions;

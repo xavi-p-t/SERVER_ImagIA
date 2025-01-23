@@ -1,6 +1,6 @@
 // Importacions necessàries
-const Conversation = require('../models/Conversation');
-const Prompt = require('../models/Prompt');
+const Conversation = require('../models/Usuaris');
+const Prompt = require('../models/Peticions');
 const { validateUUID } = require('../middleware/validators');
 const axios = require('axios');
 const { logger } = require('../config/logger');
