@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { Peticions, Usuaris } = require('./src/models'); // Importar los modelos
 
 const router = express.Router();
 
@@ -44,6 +45,20 @@ router.post('/image', upload.single('image'), async (req, res) => {
         // Enviar la solicitud
         const response = await sendToMarIA(jsonBody);
 
+
+        // Usuario fijo para pruebas (puedes cambiarlo según tu lógica)
+        const usuariId = '00000000-0000-0000-0000-000000000000';
+
+          // Guardar los datos en la tabla Peticions
+          const peticio = await Peticions.create({
+            prompt: jsonBody.prompt,
+            imatges: JSON.stringify([filePath]), // Guardar la ruta del archivo como JSON
+            model: jsonBody.model,
+            response: response.text || null,
+            usuariId // Asociar la petición al usuario
+        });
+
+        comsole.log(peticio)
         // Devolver la respuesta al cliente
         res.status(200).send(response);
 

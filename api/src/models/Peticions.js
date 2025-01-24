@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
+const { Usuaris } = require('./src/models/Usuaris');
 
 const Peticions = sequelize.define('Peticions', {
     id: {
@@ -33,6 +34,10 @@ const Peticions = sequelize.define('Peticions', {
     updatedAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
+    },
+    usuariId: {
+        type: DataTypes.UUID,
+        allowNull: false
     }
 });
 
