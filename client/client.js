@@ -71,4 +71,3 @@ class ImageUploader {
         console.error('Error durante la prueba:', error.message);
     }
 })();
-// Compare this snippet from api/src/routes/imageRoutes.js:

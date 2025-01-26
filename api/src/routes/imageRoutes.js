@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { Peticions, Usuaris } = require('./src/models'); // Importar los modelos
+const { uploadImage } = require('../controllers/imageController');
 
 const router = express.Router();
 
@@ -24,74 +24,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Ruta para subir una imagen
-router.post('/image', upload.single('image'), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send({ error: 'La imagen es requerida.' });
-    }
-
-    try {
-        const filePath = req.file.path; // Ruta donde se guardó la imagen
-
-        // Convertir la imagen a base64
-        const base64Image = fs.readFileSync(filePath, { encoding: 'base64' });
-
-        const jsonBody = {
-            model: "llama3.2-vision:latest",
-            prompt: "What is in this picture?",
-            stream: false,
-            images: [base64Image]
-        };
-       
-        // Enviar la solicitud
-        const response = await sendToMarIA(jsonBody);
-
-
-        // Usuario fijo para pruebas (puedes cambiarlo según tu lógica)
-        const usuariId = '00000000-0000-0000-0000-000000000000';
-
-          // Guardar los datos en la tabla Peticions
-          const peticio = await Peticions.create({
-            prompt: jsonBody.prompt,
-            imatges: JSON.stringify([filePath]), // Guardar la ruta del archivo como JSON
-            model: jsonBody.model,
-            response: response.text || null,
-            usuariId // Asociar la petición al usuario
-        });
-
-        comsole.log(peticio)
-        // Devolver la respuesta al cliente
-        res.status(200).send(response);
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({ error: 'Error al procesar la imagen.' });
-    }
-});
-
-// Función para enviar la solicitud a la API del modelo
-
-// **  FUNCIONA SOLO SI UTILIZO COMANDO SSH PARA REDIRIGIR EL SERVIOR A EL PUERTO LOCAL DE MI API **
-async function sendToMarIA(jsonBody) {
-    try {
-        const response = await fetch('http://localhost:1111/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(jsonBody),
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Error al enviar la solicitud:', errorText);
-            return { error: errorText };
-        }
-
-        const data = await response.json();
-        console.log('Respuesta del modelo:', data);
-        return data;
-    } catch (error) {
-        console.error('Error al enviar la solicitud:', error);
-        return { error: 'Error al comunicarse con el modelo.' };
-    }
-}
+router.post('/image', upload.single('image'), uploadImage);
 
 module.exports = router;

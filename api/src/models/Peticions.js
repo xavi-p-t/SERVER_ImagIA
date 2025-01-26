@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const { Usuaris } = require('./src/models/Usuaris');
+const Usuaris = require('./Usuaris');
 
 const Peticions = sequelize.define('Peticions', {
     id: {
@@ -18,9 +18,6 @@ const Peticions = sequelize.define('Peticions', {
     imatges: {
         type: DataTypes.TEXT, // Se utiliza TEXT para almacenar múltiples imágenes como JSON (opcional).
         allowNull: true,
-        validate: {
-            isUrl: true // Si se esperan URLs, esta validación puede ser útil.
-        }
     },
     model: {
         type: DataTypes.STRING,
@@ -35,15 +32,15 @@ const Peticions = sequelize.define('Peticions', {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
-    usuariId: {
+    usuarid: {
         type: DataTypes.UUID,
         allowNull: false
     }
 });
 
 // Establecer relación
-Peticions.belongsTo(Usuaris, { foreignKey: 'usuariId' });
-Usuaris.hasMany(Peticions, { foreignKey: 'usuariId' });
+Peticions.belongsTo(Usuaris, { foreignKey: 'usuarid' }); 
+Usuaris.hasMany(Peticions, { foreignKey: 'usuarid' });   
 
 
 module.exports = Peticions;

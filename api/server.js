@@ -38,12 +38,15 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
  */
 app.use((req, res, next) => {
     logger.info('Petició HTTP rebuda', {
+        info: req.body,
         method: req.method,
         url: req.url,
         timestamp: new Date().toISOString(),
         ip: req.ip,
         userAgent: req.get('user-agent')
     });
+
+   // console.log(req);
     next();
 });
 
@@ -119,11 +122,11 @@ async function startServer() {
         });
         
         // Iniciar el servidor HTTP
-        app.listen(PORT, () => {
+        app.listen(PORT, 'localhost', () => {
             logger.info('Servidor iniciat correctament', {
                 port: PORT,
                 mode: process.env.NODE_ENV,
-                docs: `http://127.0.0.1:${PORT}/api-docs`
+                docs: `http://localhost:${PORT}/api-docs`
             });
         });
     } catch (error) {
