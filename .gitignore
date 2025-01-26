@@ -62,4 +62,5 @@ out/
 # Nuxt.js
 .nuxt/
 
-api-server/code/server/public/images/
+
+uploads/

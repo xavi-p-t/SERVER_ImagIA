@@ -63,7 +63,7 @@ class ImageUploader {
 
 // Ejemplo de uso:
 (async () => {
-    const uploader = new ImageUploader('http://localhost:3000/api/images/image');
+    const uploader = new ImageUploader('http://0.0.0.0:3000/api/images/image');
     try {
         const response = await uploader.uploadImage('./cat.png');
         console.log('Respuesta del servidor:', response);
