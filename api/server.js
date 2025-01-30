@@ -17,6 +17,8 @@ const errorHandler = require('./src/middleware/errorHandler');
 const chatRoutes = require('./src/routes/chatRoutes');
 const { logger, expressLogger } = require('./src/config/logger');
 const imageRoutes = require('./src/routes/imageRoutes');
+const userRoutes = require('./src/routes/userRoutes');
+
 
 const multer = require('multer');
 const path = require('path');
@@ -86,6 +88,10 @@ app.use('/api/chat', chatRoutes);
 // // Registre de les rutes de imatges
 app.use('/api/images', imageRoutes);
 
+
+
+// // Registre de les rutes de imatges
+app.use('/api/usuaris', userRoutes);
 
 // Gestió centralitzada d'errors
 app.use(errorHandler);

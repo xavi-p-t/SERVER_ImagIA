@@ -8,14 +8,14 @@ const Usuaris = sequelize.define('Usuaris', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    telèfon: {
+    telefon: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
             notEmpty: true,
             isNumeric: true, // Valida que solo contenga números
-            len: [10, 15] // Longitud mínima y máxima del número de teléfono
+            len: [9, 15] // Longitud mínima y máxima del número de teléfono
         }
     },
     nickname: {
@@ -34,6 +34,14 @@ const Usuaris = sequelize.define('Usuaris', {
         validate: {
             notEmpty: true,
             isEmail: true // Valida que sea un correo electrónico válido
+        }
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            len: [4, 50] // Longitud mínima y máxima para el nickname
         }
     },
     createdAt: {
