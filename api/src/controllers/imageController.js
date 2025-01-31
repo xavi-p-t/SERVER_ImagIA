@@ -1,6 +1,12 @@
 const fs = require('fs');
 const Peticions = require('../models/Peticions');
 
+
+// Carregar variables d'entorn
+const dotenv = require('dotenv');
+dotenv.config();
+
+const CHAT_API_OLLAMA_URL = process.env.CHAT_API_OLLAMA_URL;
 // Controlador para manejar la subida de imágenes
 const uploadImage = async (req, res) => {
     console.log('Archivos recibidos:', req.file); // Verificar si el archivo está presente
@@ -54,7 +60,7 @@ const uploadImage = async (req, res) => {
 // Función para enviar la solicitud a la API del modelo
 const sendToMarIA = async (jsonBody) => {
     try {
-        const response = await fetch('http://localhost:11434/api/generate', {
+        const response = await fetch(`${CHAT_API_OLLAMA_URL}'/generate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonBody),
