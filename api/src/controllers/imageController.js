@@ -60,7 +60,7 @@ const uploadImage = async (req, res) => {
 // Función para enviar la solicitud a la API del modelo
 const sendToMarIA = async (jsonBody) => {
     try {
-        const response = await fetch(`${CHAT_API_OLLAMA_URL}/generate`, {
+        const response = await fetch('http://localhost:11434/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonBody),
