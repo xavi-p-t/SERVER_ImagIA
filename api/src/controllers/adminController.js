@@ -4,9 +4,9 @@ const api_token = "111qqqwwweee"
 
 // Controlador para iniciar sesión
 const loginUser = async (req, res) => {
-    const { identifier, password } = req.body; // Puede ser email o nickname
+    const { nickname, password } = req.body; // Puede ser email o nickname
 
-    if (!identifier || !password) {
+    if (!nickname || !password) {
         return res.status(400).json({
             status: 'ERROR',
             message: 'El correu electrònic, el sobrenom i la contrasenya són obligatoris.'
@@ -16,13 +16,8 @@ const loginUser = async (req, res) => {
     try {
         // Buscar usuario por email o nickname
         const user = await Users.findOne({
-            where: {
-                [Op.or]: [
-                    { email: identifier },
-                    { nickname: identifier }
-                ]
-            }
-        });
+            where: { nickname: nickname }
+        });        
 
         if (!user) {
             return res.status(404).json({
@@ -32,15 +27,15 @@ const loginUser = async (req, res) => {
         }
 
         // Verificar la contraseña
-        
+
         if (!(password.equals == user.password)) {
             return res.status(401).json({
                 status: 'ERROR',
                 message: 'Contrasenya incorrecta.'
             });
         }
-        
-        
+
+
         // // Generar un token JWT
         // const token = jwt.sign(
         //     { id: user.id, email: user.email },
@@ -71,11 +66,11 @@ const verifyToken = async (req, res) => {
             message: 'El token es invalid'
         });
     }
-        res.status(200).json({
-            status: 'OK',
-            message: 'Inici de sessió correcte.',
-            token
-        });
+    res.status(200).json({
+        status: 'OK',
+        message: 'Inici de sessió correcte.',
+        token
+    });
 };
 
 
