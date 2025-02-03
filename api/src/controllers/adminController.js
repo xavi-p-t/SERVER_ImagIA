@@ -65,7 +65,7 @@ const loginUser = async (req, res) => {
 const verifyToken = async (req, res) => {
     const { token } = req.body; // Puede ser email o nickname
 
-    if (api_token != adminToken) {
+    if (api_token != token) {
         return res.status(400).json({
             status: 'ERROR',
             message: 'El token es invalid'
