@@ -1,6 +1,6 @@
 const Users = require('../models/Usuaris'); // Modelo de usuario
 // const jwt = require('jsonwebtoken'); // Para generar un token JWT
-const token = "111qqqwwweee"
+const api_token = "111qqqwwweee"
 
 // Controlador para iniciar sesión
 const loginUser = async (req, res) => {
@@ -63,9 +63,9 @@ const loginUser = async (req, res) => {
 };
 
 const verifyToken = async (req, res) => {
-    const { adminToken } = req.body; // Puede ser email o nickname
+    const { token } = req.body; // Puede ser email o nickname
 
-    if (token != adminToken) {
+    if (api_token != adminToken) {
         return res.status(400).json({
             status: 'ERROR',
             message: 'El token es invalid'
