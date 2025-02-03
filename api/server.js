@@ -93,6 +93,9 @@ app.use('/api', imageRoutes);
 // // Registre de les rutes de imatges
 app.use('/api/usuaris', userRoutes);
 
+// // Registre de les rutes de imatges
+app.use('/api/admin/usuaris', adminRoutes);
+
 // Gestió centralitzada d'errors
 app.use(errorHandler);
 
