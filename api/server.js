@@ -18,6 +18,8 @@ const chatRoutes = require('./src/routes/chatRoutes');
 const { logger, expressLogger } = require('./src/config/logger');
 const imageRoutes = require('./src/routes/imageRoutes');
 const userRoutes = require('./src/routes/userRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
+
 
 
 const multer = require('multer');

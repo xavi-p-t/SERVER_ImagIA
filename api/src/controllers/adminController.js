@@ -1,5 +1,4 @@
 const Users = require('../models/Usuaris'); // Modelo de usuario
-const bcrypt = require('bcrypt'); // Para comparar contraseñas
 // const jwt = require('jsonwebtoken'); // Para generar un token JWT
 const token = "111qqqwwweee"
 
