@@ -10,8 +10,6 @@ const Usuaris = sequelize.define('Usuaris', {
     },
     telefon: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
         validate: {
             notEmpty: true,
             isNumeric: true, // Valida que solo contenga números
@@ -30,7 +28,6 @@ const Usuaris = sequelize.define('Usuaris', {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
             notEmpty: true,
             isEmail: true // Valida que sea un correo electrónico válido

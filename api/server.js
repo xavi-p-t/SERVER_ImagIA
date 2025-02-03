@@ -86,7 +86,7 @@ app.use('/api/chat', chatRoutes);
 
 
 // // Registre de les rutes de imatges
-app.use('/api/images', imageRoutes);
+app.use('/api', imageRoutes);
 
 
 

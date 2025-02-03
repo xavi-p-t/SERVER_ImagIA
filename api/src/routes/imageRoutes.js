@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Ruta para subir una imagen
-router.post('/image', upload.single('image'), uploadImage);
+router.post('/analitzar-imatge', upload.single('image'), uploadImage);
 
 module.exports = router;
 
