@@ -17,7 +17,8 @@ const loginUser = async (req, res) => {
         // Buscar usuario por email o nickname
         const user = await Users.findOne({
             where: { nickname: nickname }
-        });        
+        }); 
+        
 
         if (!user) {
             return res.status(404).json({
@@ -31,7 +32,9 @@ const loginUser = async (req, res) => {
         if (!(password.equals == user.password)) {
             return res.status(401).json({
                 status: 'ERROR',
-                message: 'Contrasenya incorrecta.'
+                message: 'Contrasenya incorrecta.',
+                user: user.toJSON
+
             });
         }
 
