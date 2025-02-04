@@ -72,7 +72,7 @@ const verifyToken = async (req, res) => {
     res.status(200).json({
         status: 'OK',
         message: 'Inici de sessió correcte.',
-        token
+        api_token
     });
 };
 
