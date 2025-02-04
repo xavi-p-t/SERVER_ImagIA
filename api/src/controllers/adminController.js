@@ -29,11 +29,11 @@ const loginUser = async (req, res) => {
 
         // Verificar la contraseña
 
-        if (!(password.equals == user.password)) {
+        if (!(password == user.password)) {
             return res.status(401).json({
                 status: 'ERROR',
                 message: 'Contrasenya incorrecta.',
-                user: user.toJSON
+                user: user.toJSON()
 
             });
         }
