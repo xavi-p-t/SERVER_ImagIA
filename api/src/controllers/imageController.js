@@ -24,7 +24,7 @@ const uploadImage = async (req, res) => {
 
         const jsonBody = {
             model: "llama3.2-vision:latest",
-            prompt: "What is in this picture?",
+            prompt: "Que hay en esta foto, responde brevemente?",
             stream: false,
             images: [base64Image]
         };
