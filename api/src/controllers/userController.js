@@ -4,56 +4,93 @@ const uuid = require('uuid'); // Para generar un ID único de usuario
 
 // Controlador para registrar un usuario
 const registerUser = async (req, res) => {
-    const { telefon, nickname, email, password } = req.body; // Obtener los parámetros del cuerpo de la solicitud
 
-    // Validación básica
-    if (!telefon || !nickname || !email || !password) {
-        return res.status(400).json({
-            status: 'ERROR',
-            message: 'Tots els camps són obligatoris.'
-        });
-    }
 
-    try {
-        // Verificar si el email o el nickname ya existen
-        const existingUser = await Users.findOne({ where: { email } });
+    const smsURL = 'http://192.168.1.16:8000/api/sendsms/';
+    const smsParams = {
+    api_token: process.env.SMS_API_TOKEN,
+    username: process.env.SMS_USERNAME,
+    receiver: telefon,
+    text: `Tu código de verificación es: ${codi_validacio}`,
+    };
 
-        if (existingUser) {
-            return res.status(400).json({
-                status: 'ERROR',
-                message: 'Aquest correu electrònic ja està registrat.'
-            });
+    // Convertir los parámetros a una query string
+    const queryParams = new URLSearchParams(smsParams).toString();
+
+    // Hacer la petición GET con fetch
+    fetch(`${smsURL}?${queryParams}`, {
+    method: 'GET',
+    })
+    .then(response => {
+        if (!response.ok) {
+        throw new Error(`Error en la petición: ${response.statusText}`);
         }
+        console.log(response); 
+    })
+    .then(data => {
+        console.log('Respuesta del servidor:', data);
+    })
+    .catch(error => {
+        console.error('Error al enviar el SMS:', error);
+    });
 
-        // Crear un nuevo usuario
-        const newUser = await Users.create({
-            id: uuid.v4(), // Generar un ID único
-            telefon,
-            nickname,
-            email,
-            password
-        });
 
-        // Devolver la respuesta con los datos del usuario creado
-        res.status(200).json({
-            status: 'OK',
-            message: "L'usuari s'ha creat correctament",
-            data: {
-                id: newUser.id,
-                telefon: newUser.telefon,
-                nickname: newUser.nickname,
-                email: newUser.email,
-                password: newUser.password
-            }
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            status: 'ERROR',
-            message: 'Error intern al crear l\'usuari.'
-        });
-    }
+
+    // const { telefon, nickname, email, password } = req.body; // Obtener los parámetros del cuerpo de la solicitud
+
+    // // Validación básica
+    // if (!telefon || !nickname || !email || !password) {
+    //     return res.status(400).json({
+    //         status: 'ERROR',
+    //         message: 'Tots els camps són obligatoris.'
+    //     });
+    // }
+
+    // try {
+    //     // Verificar si el email o el nickname ya existen
+    //     const existingUser = await Users.findOne({ where: { email } });
+
+    //     if (existingUser) {
+    //         return res.status(400).json({
+    //             status: 'ERROR',
+    //             message: 'Aquest correu electrònic ja està registrat.'
+    //         });
+    //     }
+
+    //     // Crear un nuevo usuario
+    //     const newUser = await Users.create({
+    //         id: uuid.v4(), // Generar un ID único
+    //         telefon,
+    //         nickname,
+    //         email,
+    //         password
+    //     });
+
+    //     // Devolver la respuesta con los datos del usuario creado
+    //     res.status(200).json({
+    //         status: 'OK',
+    //         message: "L'usuari s'ha creat correctament",
+    //         data: {
+    //             id: newUser.id,
+    //             telefon: newUser.telefon,
+    //             nickname: newUser.nickname,
+    //             email: newUser.email,
+    //             password: newUser.password
+    //         }
+    //     });
+    // } catch (err) {
+    //     console.error(err);
+    //     res.status(500).json({
+    //         status: 'ERROR',
+    //         message: 'Error intern al crear l\'usuari.'
+    //     });
+    // }
 };
+
+
+const validateUser =  async(req, res) => {
+    console.log("Validando. . .")
+}
 
 module.exports = {
     registerUser
