@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const {registerUser  } = require('../controllers/userController');
+const {registerUser, validateUser  } = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/registrar', registerUser);
 
 
-router.post('/validar', registerUser);
+router.post('/validar', validateUser);
 
 
 module.exports = router;

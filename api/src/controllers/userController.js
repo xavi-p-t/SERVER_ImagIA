@@ -53,10 +53,10 @@ const registerUser = async (req, res) => {
     //     const existingUser = await Users.findOne({ where: { email } });
 
     //     if (existingUser) {
-    //         return res.status(400).json({
-    //             status: 'ERROR',
-    //             message: 'Aquest correu electrònic ja està registrat.'
-    //         });
+            // return res.status(400).json({
+            //     status: 'ERROR',
+            //     message: 'Aquest correu electrònic ja està registrat.'
+            // });
     //     }
 
     //     // Crear un nuevo usuario
@@ -91,9 +91,26 @@ const registerUser = async (req, res) => {
 
 
 const validateUser =  async(req, res) => {
-    console.log("Validando. . .")
+
+    const { codi } = req.body;
+
+    if ( codi === process.env.SMS_CODE){
+        res.status(200).json({
+            status: 'OK',
+            message: "L'usuari validart correctament",
+            data: {
+                api_token:   process.env.SMS_API_TOKEN
+            }
+        });
+    } else {
+        return res.status(400).json({
+            status: 'ERROR',
+            message: 'Codi incorrecte'
+        });
+    }
 }
 
 module.exports = {
-    registerUser
+    registerUser, 
+    validateUser
 };
