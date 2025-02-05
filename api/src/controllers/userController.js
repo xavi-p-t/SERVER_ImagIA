@@ -5,6 +5,15 @@ const uuid = require('uuid'); // Para generar un ID único de usuario
 // Controlador para registrar un usuario
 const registerUser = async (req, res) => {
 
+    const { telefon, nickname, email, password } = req.body; // Obtener los parámetros del cuerpo de la solicitud
+
+    // Validación básica
+    if (!telefon || !nickname || !email || !password) {
+        return res.status(400).json({
+            status: 'ERROR',
+            message: 'Tots els camps són obligatoris.'
+        });
+    }
 
     const smsURL = 'http://192.168.1.16:8000/api/sendsms/';
     const smsParams = {
@@ -36,15 +45,7 @@ const registerUser = async (req, res) => {
 
 
 
-    // const { telefon, nickname, email, password } = req.body; // Obtener los parámetros del cuerpo de la solicitud
-
-    // // Validación básica
-    // if (!telefon || !nickname || !email || !password) {
-    //     return res.status(400).json({
-    //         status: 'ERROR',
-    //         message: 'Tots els camps són obligatoris.'
-    //     });
-    // }
+    
 
     // try {
     //     // Verificar si el email o el nickname ya existen
