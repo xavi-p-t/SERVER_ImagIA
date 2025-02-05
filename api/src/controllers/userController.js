@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
         });
 
         // Devolver la respuesta con los datos del usuario creado
-        res.status(201).json({
+        res.status(200).json({
             status: 'OK',
             message: "L'usuari s'ha creat correctament",
             data: {
