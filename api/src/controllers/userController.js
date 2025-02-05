@@ -6,6 +6,7 @@ const uuid = require('uuid'); // Para generar un ID único de usuario
 const registerUser = async (req, res) => {
 
     const { telefon, nickname, email, password } = req.body; // Obtener los parámetros del cuerpo de la solicitud
+     const codi_validacio = "0000";
 
     // Validación básica
     if (!telefon || !nickname || !email || !password) {
