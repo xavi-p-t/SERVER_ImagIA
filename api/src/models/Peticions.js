@@ -15,6 +15,13 @@ const Peticions = sequelize.define('Peticions', {
             notEmpty: true
         }
     },
+    response: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+    },
     imatges: {
         type: DataTypes.TEXT, // Se utiliza TEXT para almacenar múltiples imágenes como JSON (opcional).
         allowNull: true,

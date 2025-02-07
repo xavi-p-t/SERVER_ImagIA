@@ -34,6 +34,9 @@ const uploadImage = async (req, res) => {
         // Enviar la solicitud a la API del modelo
         const response = await sendToMarIA(jsonBody);
 
+        console.log(response.response);
+
+        // ************ poner dinamico con parametro en peticion ************
         // Usuario fijo para pruebas (puedes cambiarlo según tu lógica)
         const usuarid = '00000000-0000-0000-0000-000000000000';
         
@@ -42,11 +45,11 @@ const uploadImage = async (req, res) => {
             prompt: jsonBody.prompt,
             imatges: JSON.stringify([filePath]), // Guardar la ruta del archivo como JSON
             model: jsonBody.model,
-            response: response.text || null,
+            response: response.response,
             usuarid // Asociar la petición al usuario
         });
 
-        console.log(peticio);
+        // console.log(peticio);
 
         // Devolver la respuesta al cliente
         res.status(200).send(response);
