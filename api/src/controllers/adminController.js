@@ -172,11 +172,12 @@ const updatePlan = async (req, res) => {
         if (updatedRowsCount > 0) {
             console.log('Actualización exitosa');
         } else {
-            console.log('No se encontró ningún registro que coincida');
+            res.status(400).json({
+                status: 'ERROR',
+                message: 'No se encontró ningún registro que coincida.',
+            });
         }
         
-        
-
         res.status(200).json({
             status: 'OK',
             message: 'El pla del usuari s\'ha actualitzat correctament.',

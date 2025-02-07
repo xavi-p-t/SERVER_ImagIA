@@ -46,6 +46,11 @@ const Usuaris = sequelize.define('Usuaris', {
         allowNull: false,
         defaultValue: 'user'
     },
+    pla: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'free'
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
