@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {loginUser, verifyToken} = require('../controllers/adminController');
+const {loginUser, verifyToken, listUsers, updatePlan} = require('../controllers/adminController');
 
 const router = express.Router();
 
@@ -9,6 +9,12 @@ const router = express.Router();
 router.post('/login', loginUser);
 
 router.post('/verificar-token', verifyToken);
+
+router.post('/pla/actualitzar', updatePlan);
+
+// POST /api/admin/usuaris/pla/actualitzar
+
+router.get('/', listUsers);
 
 
 

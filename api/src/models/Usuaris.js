@@ -41,6 +41,11 @@ const Usuaris = sequelize.define('Usuaris', {
             len: [4, 50] // Longitud mínima y máxima para el nickname
         }
     },
+    rol: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user'
+    },
     createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW

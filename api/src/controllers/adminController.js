@@ -1,6 +1,9 @@
 const Users = require('../models/Usuaris'); // Modelo de usuario
 // const jwt = require('jsonwebtoken'); // Para generar un token JWT
-const api_token = "111qqqwwweee"
+const api_token = "111qqqwwweee";
+const { logger, expressLogger } = require('../config/logger');
+
+
 
 // Controlador para iniciar sesión
 const loginUser = async (req, res) => {
@@ -17,8 +20,8 @@ const loginUser = async (req, res) => {
         // Buscar usuario por email o nickname
         const user = await Users.findOne({
             where: { nickname: nickname }
-        }); 
-        
+        });
+
 
         if (!user) {
             return res.status(404).json({
@@ -77,7 +80,123 @@ const verifyToken = async (req, res) => {
 };
 
 
+
+const listUsers = async (req, res, next) => {
+
+    // const { token } = req.body; // Puede ser email o nickname
+
+    // if (api_token != token) {
+    //     return res.status(400).json({
+    //         status: 'ERROR',
+    //         message: 'El token es invalid'
+    //     });
+    // }
+    // else {
+    try {
+        logger.info('Solicitando lista de usuarios');
+
+        // Recupera todos los usuarios de la base de datos
+        const usuaris = await Users.findAll({
+            where: {
+                rol: 'admin',
+            }
+        });
+
+        // Devuelve los datos en un formato JSON válido
+        res.json({
+            "total_usuaris": `${usuaris.length}`,
+            "usuaris": usuaris.map(user => ({
+                "id": `${user.id}`,
+                "telefon": `${user.telefon}`,
+                "nickname": `${user.nickname}`,
+                "email": `${user.email}`,
+                "password": `${user.password}`,
+                "createdAt": user.createdAt.toISOString(), // Asegúrate de usar ISO 8601 para las fechas
+                "updatedAt": user.updatedAt.toISOString()
+            }))
+        });
+    } catch (error) {
+        logger.error('Error recuperando usuarios', {
+            error: error.message,
+        });
+
+        if (error.response) {
+            res.status(error.response.status).json({
+                message: 'No se pudieron recuperar los usuarios',
+                error: error.response.data
+            });
+        } else {
+            next(error);
+        }
+    }
+};
+
+
+
+// Controlador para actualizar el plan de un usuario
+const updatePlan = async (req, res) => {
+    const codi_validacio =  process.env.SMS_CODE;
+    console.log(req.body);
+    const { telefon, nickname, email, pla } = req.body; // Obtener los parámetros del cuerpo de la solicitud
+
+    try {
+        // Validar que el plan es obligatorio
+        if (!pla) {
+            return res.status(400).json({
+                status: 'ERROR',
+                message: 'El parámetro "pla" es obligatorio.',
+            });
+        }
+
+        // Validar que el plan es válido
+        const plansDisponibles = ["free", "premium"]; // Lista de planes válidos
+        if (!plansDisponibles.includes(pla)) {
+            return res.status(400).json({
+                status: 'ERROR',
+                message: `El plan "${pla}" no es válido. Los planes disponibles son: ${plansDisponibles.join(", ")}.`,
+            });
+        }
+
+        // Verificar que al menos uno de los identificadores (nickname, email o telefon) esté presente
+        if (!nickname && !email && !telefon) {
+            return res.status(400).json({
+                status: 'ERROR',
+                message: 'Debe proporcionar al menos un identificador (nickname, email o telefon).',
+            });
+        }
+        const [updatedRowsCount] = await Users.update(
+            { pla: pla },
+            { where: { nickname: nickname } }
+        );
+        
+        if (updatedRowsCount > 0) {
+            console.log('Actualización exitosa');
+        } else {
+            console.log('No se encontró ningún registro que coincida');
+        }
+        
+        
+
+        res.status(200).json({
+            status: 'OK',
+            message: 'El pla del usuari s\'ha actualitzat correctament.',
+            codi_validacio,
+        });
+    } catch (error) {
+        logger.error('Error actualizando el plan del usuario', {
+            error: error.message,
+        });
+        res.status(500).json({
+            status: 'ERROR',
+            message: 'Error intern al actualitzar el pla del usuari.',
+        });
+    }
+};
+
+
 module.exports = {
     loginUser,
-    verifyToken
+    verifyToken,
+    listUsers,
+    updatePlan
 };
