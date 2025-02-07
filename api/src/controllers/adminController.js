@@ -82,16 +82,24 @@ const verifyToken = async (req, res) => {
 
 
 const listUsers = async (req, res, next) => {
+      // Verificar la autorización
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+          return res.status(401).json({
+              status: 'ERROR',
+              message: 'No autorizado: faltan credenciales.',
+          });
+      }
 
-    // const { token } = req.body; // Puede ser email o nickname
+      const token = authHeader.split(" ")[1]; // Extraer el token después de "Bearer"
+      if (token !== admin_token) {
+          return res.status(401).json({
+              status: 'ERROR',
+              message: 'No autorizado: credenciales inválidas.',
+          });
+      }
 
-    // if (admin_token != token) {
-    //     return res.status(400).json({
-    //         status: 'ERROR',
-    //         message: 'El token es invalid'
-    //     });
-    // }
-    // else {
+
     try {
         logger.info('Solicitando lista de usuarios');
 
@@ -155,8 +163,6 @@ const updatePlan = async (req, res) => {
             });
         }
 
-        // Log del cuerpo de la solicitud
-        console.log(req.body);
         const { telefon, nickname, email, pla } = req.body; // Obtener los parámetros del cuerpo de la solicitud
 
         // Validar que el plan es obligatorio
