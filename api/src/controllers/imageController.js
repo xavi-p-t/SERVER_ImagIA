@@ -49,8 +49,6 @@ const uploadImage = async (req, res) => {
             usuarid // Asociar la petición al usuario
         });
 
-        // console.log(peticio);
-
         // Devolver la respuesta al cliente
         res.status(200).send(response);
 

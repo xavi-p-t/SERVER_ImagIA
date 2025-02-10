@@ -1,7 +1,7 @@
 const Users = require('../models/Usuaris'); // Modelo de usuario
 // const jwt = require('jsonwebtoken'); // Para generar un token JWT
 const admin_token = process.env.ADMIN_TOKEN; // Carga el token API desde las variables de entorno
-const { logger, expressLogger } = require('../config/logger');
+const { logger } = require('../config/logger');
 
 
 

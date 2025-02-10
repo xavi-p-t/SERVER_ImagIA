@@ -2,6 +2,7 @@
 const Users = require('../models/Usuaris'); // Modelo de usuario, asegúrate de tenerlo configurado
 const uuid = require('uuid'); // Para generar un ID único de usuario
 
+
 // Controlador para registrar un usuario
 const registerUser = async (req, res) => {
 
@@ -15,35 +16,6 @@ const registerUser = async (req, res) => {
             message: 'Tots els camps són obligatoris.'
         });
     }
-
-    const smsURL = 'http://192.168.1.16:8000/api/sendsms/';
-    const smsParams = {
-    api_token: process.env.SMS_API_TOKEN,
-    username: process.env.SMS_USERNAME,
-    receiver: telefon,
-    text: `Tu código de verificación es: ${codi_validacio}`,
-    };
-
-    // Convertir los parámetros a una query string
-    const queryParams = new URLSearchParams(smsParams).toString();
-
-    // Hacer la petición GET con fetch
-    fetch(`${smsURL}?${queryParams}`, {
-    method: 'GET',
-    })
-    .then(response => {
-        if (!response.ok) {
-        throw new Error(`Error en la petición: ${response.statusText}`);
-        }
-        console.log(response); 
-    })
-    .then(data => {
-        console.log('Respuesta del servidor:', data);
-    })
-    .catch(error => {
-        console.error('Error al enviar el SMS:', error);
-    });
-
 
 
     
@@ -67,6 +39,28 @@ const registerUser = async (req, res) => {
             email,
             password
         });
+
+         
+        // Guardar log de la petición en la bbdd
+        try {
+            const logData = {
+                tag: 'REGISTRAR',
+                peticio_id: uuid.v4(), 
+                usuari_id: newUser.id,  
+                ip: req.ip,
+                metodo_http: 'GET',
+                status: 200,
+                mensaje: 'Peticion a la API de registro de usuario'
+            };
+    
+            await logger.logToDatabase(logData);
+    
+            console.log('Log guardado correctamente en la base de datos.');
+        } catch (error) {
+            logger.error('Error en el endpoint /test-log', { error });
+            console.log('Ocurrió un error al guardar el log.');
+        }
+        
 
         // Devolver la respuesta con los datos del usuario creado
         res.status(200).json({
