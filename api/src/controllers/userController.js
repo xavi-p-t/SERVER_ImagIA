@@ -41,25 +41,25 @@ const registerUser = async (req, res) => {
         });
 
          
-        // Guardar log de la petición en la bbdd
-        try {
-            const logData = {
-                tag: 'REGISTRAR',
-                peticio_id: uuid.v4(), 
-                usuari_id: newUser.id,  
-                ip: req.ip,
-                metodo_http: 'GET',
-                status: 200,
-                mensaje: 'Peticion a la API de registro de usuario'
-            };
+        // // Guardar log de la petición en la bbdd
+        // try {
+        //     const logData = {
+        //         tag: 'REGISTRAR',
+        //         peticio_id: uuid.v4(), 
+        //         usuari_id: newUser.id,  
+        //         ip: req.ip,
+        //         metodo_http: 'GET',
+        //         status: 200,
+        //         mensaje: 'Peticion a la API de registro de usuario'
+        //     };
     
-            await logger.logToDatabase(logData);
+        //     await logger.logToDatabase(logData);
     
-            console.log('Log guardado correctamente en la base de datos.');
-        } catch (error) {
-            logger.error('Error en el endpoint /test-log', { error });
-            console.log('Ocurrió un error al guardar el log.');
-        }
+        //     console.log('Log guardado correctamente en la base de datos.');
+        // } catch (error) {
+        //     logger.error('Error en el endpoint /test-log', { error });
+        //     console.log('Ocurrió un error al guardar el log.');
+        // }
         
 
         // Devolver la respuesta con los datos del usuario creado
