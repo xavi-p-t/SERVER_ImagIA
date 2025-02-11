@@ -63,7 +63,9 @@ class ImageUploader {
 
 // Ejemplo de uso:
 (async () => {
-    const uploader = new ImageUploader('http://0.0.0.0:3000/api/analitzar-imatge');
+    // const uploader = new ImageUploader('http://0.0.0.0:3000/api/analitzar-imatge');
+    const uploader = new ImageUploader('https://imagia1.ieti.site/api/analitzar-imatge');
+  
     try {
         const response = await uploader.uploadImage('./cat.png');
         console.log('Respuesta del servidor:', response);

@@ -13,7 +13,6 @@ const Usuaris = sequelize.define('Usuaris', {
         validate: {
             notEmpty: true,
             isNumeric: true, // Valida que solo contenga números
-            len: [9, 15] // Longitud mínima y máxima del número de teléfono
         }
     },
     nickname: {
@@ -21,8 +20,7 @@ const Usuaris = sequelize.define('Usuaris', {
         allowNull: false,
         unique: true,
         validate: {
-            notEmpty: true,
-            len: [3, 50] // Longitud mínima y máxima para el nickname
+            notEmpty: true
         }
     },
     email: {
@@ -37,8 +35,7 @@ const Usuaris = sequelize.define('Usuaris', {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            notEmpty: true,
-            len: [4, 50] // Longitud mínima y máxima para el nickname
+            notEmpty: true
         }
     },
     rol: {
