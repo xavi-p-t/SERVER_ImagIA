@@ -7,7 +7,8 @@ const uuid = require('uuid'); // Para generar un ID único de usuario
 const registerUser = async (req, res) => {
 
     const { telefon, nickname, email, password } = req.body; // Obtener los parámetros del cuerpo de la solicitud
-     const codi_validacio = "0000";
+    const codi_validacio = "0000";
+
 
     // Validación básica
     if (!telefon || !nickname || !email || !password) {
@@ -16,9 +17,36 @@ const registerUser = async (req, res) => {
             message: 'Tots els camps són obligatoris.'
         });
     }
+    const smsURL = 'http://192.168.1.16:8000/api/sendsms/';
+    const smsParams = {
+        api_token: process.env.SMS_API_TOKEN,
+        username: process.env.SMS_USERNAME,
+        receiver: telefon,
+        text: `Tu código de verificación es: ${codi_validacio}`,
+    };
+
+    // Convertir los parámetros a una query string
+    const queryParams = new URLSearchParams(smsParams).toString();
+
+    // Hacer la petición GET con fetch
+    fetch(`${smsURL}?${queryParams}`, {
+        method: 'GET',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error en la petición: ${response.statusText}`);
+            }
+            console.log(response);
+        })
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+        })
+        .catch(error => {
+            console.error('Error al enviar el SMS:', error);
+        });
 
 
-    
+
 
     try {
         // Verificar si el email o el nickname ya existen
@@ -40,7 +68,7 @@ const registerUser = async (req, res) => {
             password
         });
 
-         
+
         // // Guardar log de la petición en la bbdd
         // try {
         //     const logData = {
@@ -52,15 +80,15 @@ const registerUser = async (req, res) => {
         //         status: 200,
         //         mensaje: 'Peticion a la API de registro de usuario'
         //     };
-    
+
         //     await logger.logToDatabase(logData);
-    
+
         //     console.log('Log guardado correctamente en la base de datos.');
         // } catch (error) {
         //     logger.error('Error en el endpoint /test-log', { error });
         //     console.log('Ocurrió un error al guardar el log.');
         // }
-        
+
 
         // Devolver la respuesta con los datos del usuario creado
         res.status(200).json({
@@ -84,16 +112,16 @@ const registerUser = async (req, res) => {
 };
 
 
-const validateUser =  async(req, res) => {
+const validateUser = async (req, res) => {
 
     const { codi } = req.body;
 
-    if ( codi === process.env.SMS_CODE){
+    if (codi === process.env.SMS_CODE) {
         res.status(200).json({
             status: 'OK',
             message: "L'usuari validart correctament",
             data: {
-                api_key:   process.env.SMS_API_TOKEN
+                api_key: process.env.SMS_API_TOKEN
             }
         });
     } else {
@@ -105,6 +133,6 @@ const validateUser =  async(req, res) => {
 }
 
 module.exports = {
-    registerUser, 
+    registerUser,
     validateUser
 };
